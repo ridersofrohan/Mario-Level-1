@@ -423,6 +423,7 @@ class Level1(tools._State):
         self.check_if_mario_in_transition_state()
         self.check_for_mario_death()
         self.update_viewport()
+        print(self.mario.rect.x, self.mario.rect.y)
         self.overhead_info_display.update(self.game_info, self.mario)
 
 
@@ -888,7 +889,7 @@ class Level1(tools._State):
             self.mario.rect.bottom = enemy.rect.top
             self.mario.state = c.JUMP
             self.mario.y_vel = -7
-        
+
 
 
     def adjust_mario_for_y_shell_collisions(self, shell):
