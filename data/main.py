@@ -1,5 +1,3 @@
-__author__ = 'justinarmstrong'
-
 from . import setup,tools
 from .states import main_menu,load_screen,level1
 from . import constants as c
@@ -25,6 +23,9 @@ class MarioLevel():
 
   def getGameInfo(self):
     return self.run_it.state.game_info
+
+  def isEnd(self):
+    return self.run_it.done
 
   def getMario(self):
     return self.run_it.state.mario

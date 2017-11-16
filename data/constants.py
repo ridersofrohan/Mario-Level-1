@@ -143,6 +143,7 @@ LEVEL = 'level'
 GAME_OVER = 'game over'
 FAST_COUNT_DOWN = 'fast count down'
 END_OF_LEVEL = 'end of level'
+GAME_TIME = 1000
 
 
 #GAME INFO DICTIONARY KEYS

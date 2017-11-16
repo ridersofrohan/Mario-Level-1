@@ -21,6 +21,8 @@ class LoadScreen(tools._State):
         self.overhead_info = info.OverheadInfo(self.game_info, info_state)
         self.sound_manager = game_sound.Sound(self.overhead_info)
 
+        self.done = True
+
 
     def set_next_state(self):
         """Sets the next state"""

@@ -21,7 +21,7 @@ class OverheadInfo(object):
         self.sprite_sheet = setup.GFX['text_images']
         self.coin_total = game_info[c.COIN_TOTAL]
         if agent:
-            self.time = 50000
+            self.time = c.GAME_TIME
         else:
             self.time = 401
         self.current_time = 0

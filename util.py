@@ -66,7 +66,7 @@ class MDP:
     # Mapping to notation from class:
     #   state = s, action = a, newState = s', prob = T(s, a, s'), reward = Reward(s, a, s')
     # If IsEnd(state), return the empty list.
-    def succAndProbReward(self, state, action): raise NotImplementedError("Override me")
+    def succAndProbReward(self, state, action, game=None): raise NotImplementedError("Override me")
 
     def discount(self): raise NotImplementedError("Override me")
 

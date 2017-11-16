@@ -439,6 +439,8 @@ class Level1(tools._State):
             keys[tools.keybinding[item]] = 1
           keys = tuple(keys)
 
+        self.update_game(keys)
+
         stateInfo = {
           'score': self.game_info["score"],
           'time': self.overhead_info_display.time,
@@ -449,8 +451,7 @@ class Level1(tools._State):
         }
         print(stateInfo)
 
-        self.game_info['state'] = stateInfo
-        self.update_game(keys)
+        self.game_info['state'] = (self.game_info["score"], self.overhead_info_display.time, self.game_info["coin total"], self.mario.rect.x, self.mario.rect.y)
 
 
     def check_points_check(self):

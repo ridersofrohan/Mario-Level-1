@@ -7,6 +7,15 @@ import time
 from data.main import MarioLevel
 from agents import MarioMDP, SimpleAgent
 from util import RLAlgorithm
+from qlearn import QLearningAlgorithm
+import util
+
+
+def testSimulate():
+    agent = SimpleAgent()
+    game = MarioLevel(agent=agent)
+    while not game.isEnd():
+        game.progress(action=agent.getAction())
 
 
 def simulate(mdp, rl, numTrials=10, maxIterations=10000, verbose=False, sort=False):
@@ -19,16 +28,18 @@ def simulate(mdp, rl, numTrials=10, maxIterations=10000, verbose=False, sort=Fal
             if accum >= target: return i
         raise Exception("Invalid probs: %s" % probs)
 
+
     totalRewards = []  # The rewards we get on each trial
     for trial in range(numTrials):
-        game = MarioLevel(agent=agent)
+        game = MarioLevel()
         state = mdp.startState()
         sequence = [state]
         totalDiscount = 1
         totalReward = 0
-        for _ in range(maxIterations):
+        for i in range(maxIterations):
+            print(i)
             action = rl.getAction(state)
-            transitions = mdp.succAndProbReward(state, action)
+            transitions = mdp.succAndProbReward(state, action, game=game)
             if sort: transitions = sorted(transitions)
             if len(transitions) == 0:
                 rl.incorporateFeedback(state, action, 0, None)
@@ -45,6 +56,7 @@ def simulate(mdp, rl, numTrials=10, maxIterations=10000, verbose=False, sort=Fal
             totalReward += totalDiscount * reward
             totalDiscount *= mdp.discount()
             state = newState
+            game.progress(action=action)
         if verbose:
             print "Trial %d (totalReward = %s): %s" % (trial, totalReward, sequence)
         totalRewards.append(totalReward)
@@ -59,19 +71,9 @@ def identityFeatureExtractor(state, action):
     return [(featureKey, featureValue)]
 
 
-def testSimulate():
-    agent = SimpleAgent()
-    game = MarioLevel(agent=agent)
-    game.progress()
-    game.progress()
-    game.progress()
-
-    for i in range(1000):
-        game.progress(action=agent.getAction())
-
-
 if __name__=='__main__':
-    # mdp = MarioMDP()
-    # ql = QLearningAlgorithm(mdp.actions, mdp.discount(), identityFeatureExtractor)
-    # simulation = util.simulate(mdp, ql, 30000)
-    testSimulate()
+    mdp = MarioMDP()
+    ql = QLearningAlgorithm(mdp.actions, mdp.discount(), identityFeatureExtractor)
+    simulation = simulate(mdp, ql, 30000)
+
+    #testSimulate()
