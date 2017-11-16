@@ -16,10 +16,13 @@ from .. components import info
 from .. components import score
 from .. components import castle_flag
 
+from agents import SimpleAgent
+
 
 class Level1(tools._State):
-    def __init__(self):
+    def __init__(self, agent=None):
         tools._State.__init__(self)
+        self.agent = agent
 
     def startup(self, current_time, persist):
         """Called when the State object is created"""
@@ -403,6 +406,13 @@ class Level1(tools._State):
 
     def update_all_sprites(self, keys):
         """Updates the location of all sprites on the screen."""
+        action = self.agent.getAction(keys)
+        keys = list(keys)
+        keys[tools.keybinding[action]] = 1
+        keys = tuple(keys)
+
+        print(keys)
+
         self.mario.update(keys, self.game_info, self.powerup_group)
         for score in self.moving_score_list:
             score.update(self.moving_score_list, self.game_info)

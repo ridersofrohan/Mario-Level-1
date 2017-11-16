@@ -11,8 +11,11 @@ import pygame as pg
 from data.main import main
 import cProfile
 
+from agents import SimpleAgent
+
 
 if __name__=='__main__':
-    main()
+    agent = SimpleAgent()
+    main(agent=agent)
     pg.quit()
     sys.exit()
