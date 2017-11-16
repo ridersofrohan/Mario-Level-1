@@ -179,6 +179,8 @@ def simulate(mdp, rl, numTrials=10, maxIterations=1000, verbose=False,
             rl.incorporateFeedback(state, action, reward, newState)
             totalReward += totalDiscount * reward
             totalDiscount *= mdp.discount()
+            # Make our call to pass the action into the mario level
+            #
             state = newState
         if verbose:
             print "Trial %d (totalReward = %s): %s" % (trial, totalReward, sequence)

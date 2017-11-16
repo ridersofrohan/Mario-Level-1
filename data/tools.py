@@ -42,11 +42,15 @@ class Control(object):
         self.state.update(self.screen, self.keys, self.current_time)
 
     def flip_state(self):
-        previous, self.state_name = self.state_name, self.state.next
-        persist = self.state.cleanup()
-        self.state = self.state_dict[self.state_name]
-        self.state.startup(self.current_time, persist)
-        self.state.previous = previous
+        if self.state_name == 'level1' and self.state.next == 'load screen':
+            self.done = True
+        else:
+            print(self.state_name, self.state.next)
+            previous, self.state_name = self.state_name, self.state.next
+            persist = self.state.cleanup()
+            self.state = self.state_dict[self.state_name]
+            self.state.startup(self.current_time, persist)
+            self.state.previous = previous
 
 
     def event_loop(self):

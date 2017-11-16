@@ -414,7 +414,16 @@ class Level1(tools._State):
         keys[tools.keybinding[action]] = 1
         keys = tuple(keys)
 
-        print(keys)
+        stateInfo = {
+          'score': self.game_info["score"],
+          'time': self.overhead_info_display.time,
+          'coin_total': self.game_info["coin total"],
+          'x': self.mario.rect.x,
+          'y': self.mario.rect.y,
+          'death': self.mario.dead
+        }
+
+        print(stateInfo)
 
         self.mario.update(keys, self.game_info, self.powerup_group)
         for score in self.moving_score_list:
@@ -1335,6 +1344,7 @@ class Level1(tools._State):
             self.mario.x_vel = 0
             self.state = c.FROZEN
             self.game_info[c.MARIO_DEAD] = True
+            self.agent.isEnd = True
 
         if self.mario.dead:
             self.play_death_song()
@@ -1352,8 +1362,8 @@ class Level1(tools._State):
         """sets the new game values after a player's death"""
         if self.game_info[c.SCORE] > self.persist[c.TOP_SCORE]:
             self.persist[c.TOP_SCORE] = self.game_info[c.SCORE]
-        if self.mario.dead:
-            self.persist[c.LIVES] -= 1
+        # if self.mario.dead:
+        #     self.persist[c.LIVES] -= 1
 
         if self.persist[c.LIVES] == 0:
             self.next = c.GAME_OVER

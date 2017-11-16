@@ -57,25 +57,8 @@ def simulate_QL_over_MDP(mdp, featureExtractor):
     # that you add a few lines of code here to run value iteration, simulate Q-learning on the MDP,
     # and then print some stats comparing the policies learned by these two approaches.
     # BEGIN_YOUR_CODE
-    valueIteration = ValueIteration() 
-    valueIteration.solve(mdp)
-    viPolicy = valueIteration.pi
     ql = QLearningAlgorithm(mdp.actions, mdp.discount(), featureExtractor)
     simulation = util.simulate(mdp, ql, 30000)
-    ql.explorationProb = 0
-    numDiff = 0.0
-    differences = defaultdict(float)
-    numSame = 0.0
-    for key,action in viPolicy.items():
-        qlAction = ql.getAction(key)
-        if qlAction != action:
-            differences[(action, qlAction)] += 1
-            numDiff += 1
-        else:
-            numSame += 1
-    print numDiff 
-    print numSame
-    print differences
     # END_YOUR_CODE
 
 
