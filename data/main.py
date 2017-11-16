@@ -4,7 +4,7 @@ from . import setup,tools
 from .states import main_menu,load_screen,level1
 from . import constants as c
 
-
+# CHANGE - Added an optional agent parameter
 def main(agent=None):
     """Add states to control here."""
     run_it = tools.Control(setup.ORIGINAL_CAPTION)

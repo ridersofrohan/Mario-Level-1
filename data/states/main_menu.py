@@ -33,6 +33,9 @@ class Menu(tools._State):
         self.setup_mario()
         self.setup_cursor()
 
+        # CHANGE - Added this to remove the main menu part
+        self.done = True
+
 
     def setup_cursor(self):
         """Creates the mushroom cursor to select 1 or 2 player game"""

@@ -15,6 +15,7 @@ from agents import SimpleAgent
 
 
 if __name__=='__main__':
+    # CHANGE - Added an optional agent parameter
     agent = SimpleAgent()
     main(agent=agent)
     pg.quit()

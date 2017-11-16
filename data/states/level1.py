@@ -20,6 +20,7 @@ from agents import SimpleAgent
 
 
 class Level1(tools._State):
+    # CHANGE - Added an optional agent parameter
     def __init__(self, agent=None):
         tools._State.__init__(self)
         self.agent = agent
@@ -406,6 +407,8 @@ class Level1(tools._State):
 
     def update_all_sprites(self, keys):
         """Updates the location of all sprites on the screen."""
+
+        # CHANGE - Gets the action from the agent
         action = self.agent.getAction(keys)
         keys = list(keys)
         keys[tools.keybinding[action]] = 1
