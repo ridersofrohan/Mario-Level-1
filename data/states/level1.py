@@ -40,7 +40,7 @@ class Level1(tools._State):
         self.flag_score_total = 0
 
         self.moving_score_list = []
-        self.overhead_info_display = info.OverheadInfo(self.game_info, c.LEVEL)
+        self.overhead_info_display = info.OverheadInfo(self.game_info, c.LEVEL, agent=self.agent)
         self.sound_manager = game_sound.Sound(self.overhead_info_display)
 
         self.setup_background()
@@ -355,22 +355,22 @@ class Level1(tools._State):
                                                      self.enemy_group)
 
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys, current_time, action=None):
         """Updates Entire level using states.  Called by the control object"""
         self.game_info[c.CURRENT_TIME] = self.current_time = current_time
-        self.handle_states(keys)
+        self.handle_states(keys, action=action)
         self.check_if_time_out()
         self.blit_everything(surface)
         self.sound_manager.update(self.game_info, self.mario)
 
 
 
-    def handle_states(self, keys):
+    def handle_states(self, keys, action=None):
         """If the level is in a FROZEN state, only mario will update"""
         if self.state == c.FROZEN:
             self.update_during_transition_state(keys)
         elif self.state == c.NOT_FROZEN:
-            self.update_all_sprites(keys)
+            self.update_all_sprites(keys, action=action)
         elif self.state == c.IN_CASTLE:
             self.update_while_in_castle()
         elif self.state == c.FLAG_AND_FIREWORKS:
@@ -405,26 +405,7 @@ class Level1(tools._State):
                 self.game_info[c.LEVEL_STATE] = self.state = c.NOT_FROZEN
 
 
-    def update_all_sprites(self, keys):
-        """Updates the location of all sprites on the screen."""
-
-        # CHANGE - Gets the action from the agent
-        action = self.agent.getAction(keys)
-        keys = list(keys)
-        keys[tools.keybinding[action]] = 1
-        keys = tuple(keys)
-
-        stateInfo = {
-          'score': self.game_info["score"],
-          'time': self.overhead_info_display.time,
-          'coin_total': self.game_info["coin total"],
-          'x': self.mario.rect.x,
-          'y': self.mario.rect.y,
-          'death': self.mario.dead
-        }
-
-        print(stateInfo)
-
+    def update_game(self, keys):
         self.mario.update(keys, self.game_info, self.powerup_group)
         for score in self.moving_score_list:
             score.update(self.moving_score_list, self.game_info)
@@ -445,8 +426,31 @@ class Level1(tools._State):
         self.check_if_mario_in_transition_state()
         self.check_for_mario_death()
         self.update_viewport()
-        print(self.mario.rect.x, self.mario.rect.y)
         self.overhead_info_display.update(self.game_info, self.mario)
+
+
+    def update_all_sprites(self, keys, action=None):
+        """Updates the location of all sprites on the screen."""
+        if action:
+          action = c.ACTIONS[action]
+          print(action)
+          keys = list(keys)
+          for item in action:
+            keys[tools.keybinding[item]] = 1
+          keys = tuple(keys)
+
+        stateInfo = {
+          'score': self.game_info["score"],
+          'time': self.overhead_info_display.time,
+          'coin_total': self.game_info["coin total"],
+          'x': self.mario.rect.x,
+          'y': self.mario.rect.y,
+          'death': self.mario.dead
+        }
+        print(stateInfo)
+
+        self.game_info['state'] = stateInfo
+        self.update_game(keys)
 
 
     def check_points_check(self):
@@ -1344,7 +1348,6 @@ class Level1(tools._State):
             self.mario.x_vel = 0
             self.state = c.FROZEN
             self.game_info[c.MARIO_DEAD] = True
-            self.agent.isEnd = True
 
         if self.mario.dead:
             self.play_death_song()

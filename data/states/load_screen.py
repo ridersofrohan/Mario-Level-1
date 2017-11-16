@@ -31,7 +31,7 @@ class LoadScreen(tools._State):
         return c.LOAD_SCREEN
 
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys, current_time, action=None):
         """Updates the loading screen"""
         if (current_time - self.start_time) < 2400:
             surface.fill(c.BLACK)
@@ -64,7 +64,7 @@ class GameOver(LoadScreen):
         """sets the state to send to the overhead info object"""
         return c.GAME_OVER
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys, current_time, action=None):
         self.current_time = current_time
         self.sound_manager.update(self.persist, None)
 
@@ -96,7 +96,7 @@ class TimeOut(LoadScreen):
         """Sets the state to send to the overhead info object"""
         return c.TIME_OUT
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys, current_time, action=None):
         self.current_time = current_time
 
         if (self.current_time - self.start_time) < 2400:

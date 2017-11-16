@@ -8,7 +8,8 @@ keybinding = {
     'jump':pg.K_a,
     'left':pg.K_LEFT,
     'right':pg.K_RIGHT,
-    'down':pg.K_DOWN
+    'down':pg.K_DOWN,
+    'long_jump':pg.K_r
 }
 
 class Control(object):
@@ -33,16 +34,16 @@ class Control(object):
         self.state_name = start_state
         self.state = self.state_dict[self.state_name]
 
-    def update(self):
+    def update(self, action=None):
         self.current_time = pg.time.get_ticks()
         if self.state.quit:
             self.done = True
         elif self.state.done:
             self.flip_state()
-        self.state.update(self.screen, self.keys, self.current_time)
+        self.state.update(self.screen, self.keys, self.current_time, action=action)
 
     def flip_state(self):
-        if self.state_name == 'level1' and self.state.next == 'load screen':
+        if self.state_name == 'level1':
             self.done = True
         else:
             print(self.state_name, self.state.next)
@@ -70,6 +71,17 @@ class Control(object):
             self.show_fps = not self.show_fps
             if not self.show_fps:
                 pg.display.set_caption(self.caption)
+
+
+    def progress(self, action=None):
+        self.event_loop()
+        self.update(action=action)
+        pg.display.update()
+        self.clock.tick(self.fps)
+        if self.show_fps:
+            fps = self.clock.get_fps()
+            with_fps = "{} - {:.2f} FPS".format(self.caption, fps)
+            pg.display.set_caption(with_fps)
 
 
     def main(self):
@@ -106,7 +118,7 @@ class _State(object):
         self.done = False
         return self.persist
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys, current_time, action=None):
         pass
 
 

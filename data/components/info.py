@@ -17,10 +17,13 @@ class Character(pg.sprite.Sprite):
 class OverheadInfo(object):
     """Class for level information like score, coin total,
         and time remaining"""
-    def __init__(self, game_info, state):
+    def __init__(self, game_info, state, agent=None):
         self.sprite_sheet = setup.GFX['text_images']
         self.coin_total = game_info[c.COIN_TOTAL]
-        self.time = 401
+        if agent:
+            self.time = 50000
+        else:
+            self.time = 401
         self.current_time = 0
         self.total_lives = game_info[c.LIVES]
         self.top_score = game_info[c.TOP_SCORE]

@@ -8,17 +8,14 @@ Super Mario Bros for the NES.
 
 import sys
 import pygame as pg
-from data.main import main
+from data.main import MarioLevel
 import cProfile
 
 from agents import SimpleAgent
 
 
 if __name__=='__main__':
-    # CHANGE - Added an optional agent parameter
-    for i in range(0, 10):
-      agent = SimpleAgent()
-      main(agent=agent)
-      print("HEREHRHEHREHRH")
-    # pg.quit()
-    # sys.exit()
+    game = MarioLevel()
+    game.run()
+    pg.quit()
+    sys.exit()

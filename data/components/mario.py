@@ -436,7 +436,7 @@ class Mario(pg.sprite.Sprite):
         """This function is called if Mario is standing still"""
         self.check_to_allow_jump(keys)
         self.check_to_allow_fireball(keys)
-        
+
         self.frame_index = 0
         self.x_vel = 0
         self.y_vel = 0
@@ -464,6 +464,14 @@ class Mario(pg.sprite.Sprite):
                     setup.SFX['small_jump'].play()
                 self.state = c.JUMP
                 self.y_vel = c.JUMP_VEL
+        elif keys[tools.keybinding['long_jump']]:
+            if self.allow_jump:
+                if self.big:
+                    setup.SFX['big_jump'].play()
+                else:
+                    setup.SFX['small_jump'].play()
+                self.state = c.JUMP
+                self.y_vel = c.LONG_JUMP_VEL
         else:
             self.state = c.STAND
 
@@ -487,7 +495,7 @@ class Mario(pg.sprite.Sprite):
 
     def check_to_allow_jump(self, keys):
         """Check to allow Mario to jump"""
-        if not keys[tools.keybinding['jump']]:
+        if not keys[tools.keybinding['jump']] and not keys[tools.keybinding['long_jump']]:
             self.allow_jump = True
 
 
@@ -569,6 +577,18 @@ class Mario(pg.sprite.Sprite):
                 else:
                     self.y_vel = c.JUMP_VEL
 
+        if keys[tools.keybinding['long_jump']]:
+            if self.allow_jump:
+                if self.big:
+                    setup.SFX['big_jump'].play()
+                else:
+                    setup.SFX['small_jump'].play()
+                self.state = c.JUMP
+                if self.x_vel > 4.5 or self.x_vel < -4.5:
+                    self.y_vel = c.LONG_JUMP_VEL - .5
+                else:
+                    self.y_vel = c.LONG_JUMP_VEL
+
 
         if keys[tools.keybinding['left']]:
             self.get_out_of_crouch()
@@ -632,7 +652,7 @@ class Mario(pg.sprite.Sprite):
 
     def jumping(self, keys, fire_group):
         """Called when Mario is in a JUMP state."""
-        self.allow_jump = False
+        #self.allow_jump = False
         self.frame_index = 4
         self.gravity = c.JUMP_GRAVITY
         self.y_vel += self.gravity

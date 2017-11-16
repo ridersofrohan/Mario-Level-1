@@ -41,9 +41,9 @@ SMALL_TURNAROUND = .35
 
 GRAVITY = 1.01
 JUMP_GRAVITY = .31
-JUMP_VEL = -10
-FAST_JUMP_VEL = -12.5
-MAX_Y_VEL = 11
+JUMP_VEL = -12
+LONG_JUMP_VEL = -17
+MAX_Y_VEL = 30
 
 MAX_RUN_SPEED = 800
 MAX_WALK_SPEED = 6
@@ -171,7 +171,17 @@ SPED_UP_NORMAL = 'sped up normal'
 MARIO_INVINCIBLE = 'mario invincible'
 
 
-
+#POSSIBLE AGENT ACTIONS
+ACTIONS = {
+  'action' : ['action'],
+  'jump' : ['jump'],
+  'left' : ['left'],
+  'right' : ['right'],
+  'down' : ['down'],
+  'right_jump' : ['right', 'jump'],
+  'left_jump' : ['left', 'jump'],
+  'long_jump' : ['long_jump']
+}
 
 
 
