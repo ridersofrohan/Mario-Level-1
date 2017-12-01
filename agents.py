@@ -48,12 +48,7 @@ class MarioMDP(util.MDP):
     transitions = []
     probs = 1.0/len(self.actions(state))
     for option in self.actions(state):
-<<<<<<< HEAD
-      tempGame = deepcopy(game)
-=======
-      #tempGame = deepcopy(game)
       tempGame = game
->>>>>>> origin/master
       tempGame.progress(action=option)
 
       newGameInfo = tempGame.getGameInfo()

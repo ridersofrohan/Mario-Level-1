@@ -70,7 +70,6 @@ def simple_rl():
         return (0, randAction)
       return maxAction
 
-
   alpha = 0.618
   for episode in range(0, 10):
     env.lock.acquire()
@@ -82,18 +81,16 @@ def simple_rl():
 
     for i in range(0, 1000):
       print(s)
-
       env.render()
 
       action = get_best_action(s, 0.2)[1]
-      print(action)
+      print(i, action)
       succ, reward, done, info = env.step(action)
 
       oldVal = qTable[str(s)][str(action)]
       qTable[str(s)][str(action)] += alpha * (reward + get_best_action(succ, 0.0)[0] - oldVal)
       G += reward
       s = succ
-      print(i)
     print("Episode: {} \t Reward: {}".format(episode, G))
 
     env.lock.acquire()
@@ -105,5 +102,3 @@ def simple_rl():
 
 if __name__ == '__main__':
   simple_rl()
-
-
