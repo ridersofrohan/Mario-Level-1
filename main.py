@@ -13,7 +13,8 @@ class RandomAgent(object):
     self.action_space = action_space
 
   def act(self, observation, reward, done):
-    return self.action_space.sample()
+    # always right = [0,0,0,1,0,0]
+    return [self.action_space.sample()]
 
 
 def main():
@@ -70,6 +71,12 @@ def simple_rl():
         return (0, randAction)
       return maxAction
 
+  def generate_reward(state, info):
+    if info['life'] == 0:
+      return float("-inf")
+    return info['distance'] + info['score'] + info['time']
+
+
   alpha = 0.618
   for episode in range(0, 10):
     env.lock.acquire()
@@ -86,12 +93,20 @@ def simple_rl():
       action = get_best_action(s, 0.2)[1]
       print(i, action)
       succ, reward, done, info = env.step(action)
+
+      reward = generate_reward(succ, info)
+
       print(info)
+      print(reward)
 
       oldVal = qTable[str(s)][str(action)]
       qTable[str(s)][str(action)] += alpha * (reward + get_best_action(succ, 0.0)[0] - oldVal)
       G += reward
       s = succ
+
+      if reward == float("-inf"):
+        break
+
     print("Episode: {} \t Reward: {}".format(episode, G))
 
     env.lock.acquire()
