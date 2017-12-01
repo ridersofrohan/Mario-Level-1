@@ -30,8 +30,9 @@ class RandomAgent(object):
     self.action_space = action_space
 
   def act(self, observation, reward, done):
-    # always right = [0,0,0,1,0,0]
-    return [self.action_space.sample()]
+    #return [0,0,0,1,0,0] # always right
+    return [0,0,0,0,0,0] # dont move
+    #return [self.action_space.sample()]
 
 
 def main():
