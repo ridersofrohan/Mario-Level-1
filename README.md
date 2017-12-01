@@ -7,6 +7,8 @@
 Uses (https://github.com/koltafrickenfer/gym-super-mario)
 
 ```shell
+brew install fceux
+
 source env/bin/activate
 pip install -r requrements.txt
 ```
