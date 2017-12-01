@@ -87,17 +87,15 @@ def simple_rl():
     G, reward = 0, 0
 
     for i in range(0, 1000):
-      print(s)
       env.render()
 
-      action = get_best_action(s, 0.2)[1]
-      print(i, action)
+      action = get_best_action(s, 0.1)[1]
       succ, reward, done, info = env.step(action)
-
       reward = generate_reward(succ, info)
 
+      print(s)
+      print(i, action, reward)
       print(info)
-      print(reward)
 
       oldVal = qTable[str(s)][str(action)]
       qTable[str(s)][str(action)] += alpha * (reward + get_best_action(succ, 0.0)[0] - oldVal)
