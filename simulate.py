@@ -58,6 +58,7 @@ def simulate(mdp, rl, numTrials=10, maxIterations=10000, verbose=False, sort=Fal
             totalReward += totalDiscount * reward
             totalDiscount *= mdp.discount()
             state = newState
+            print action
             game.progress(action=action)
         if verbose:
             print("Trial {} (totalReward = {}): {}".format(trial, totalReward, sequence))

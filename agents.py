@@ -37,15 +37,29 @@ class MarioMDP(util.MDP):
   # If IsEnd(state), return the empty list.
   def succAndProbReward(self, state, action, game=None):
     def calculateReward(s):
+        # State information order:
+        # 0 - Score
+        # 1 - Time
+        # 2 - Coin Total
+        # 3 - Mario X Position
+        # 4 - Mario Y Position
       return (s[0]*3) + s[3]
 
     transitions = []
     probs = 1.0/len(self.actions(state))
     for option in self.actions(state):
+<<<<<<< HEAD
       tempGame = deepcopy(game)
+=======
+      #tempGame = deepcopy(game)
+      tempGame = game
+>>>>>>> origin/master
       tempGame.progress(action=option)
 
-      newState = tempGame.getGameInfo['state']
+      newGameInfo = tempGame.getGameInfo()
+      if 'state' not in newGameInfo.keys(): continue
+      print ("this is the new state {}".format(newGameInfo))
+      newState = newGameInfo['state']
       if tempGame.isEnd():
         transitions.append((newState, probs, -1*float("inf")))
       else:
