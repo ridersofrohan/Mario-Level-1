@@ -19,7 +19,7 @@ class Control(object):
     def __init__(self, caption):
         self.screen = pg.display.get_surface()
         self.done = False
-        self.clock = pg.time.Clock()
+        #self.clock = pg.time.Clock()
         self.caption = caption
         self.fps = 60
         self.show_fps = False
@@ -77,9 +77,9 @@ class Control(object):
         self.event_loop()
         self.update(action=action)
         pg.display.update()
-        self.clock.tick(self.fps)
+        #self.clock.tick(self.fps)
         if self.show_fps:
-            fps = self.clock.get_fps()
+            #fps = self.clock.get_fps()
             with_fps = "{} - {:.2f} FPS".format(self.caption, fps)
             pg.display.set_caption(with_fps)
 
@@ -90,9 +90,9 @@ class Control(object):
             self.event_loop()
             self.update()
             pg.display.update()
-            self.clock.tick(self.fps)
+            #self.clock.tick(self.fps)
             if self.show_fps:
-                fps = self.clock.get_fps()
+                #fps = self.clock.get_fps()
                 with_fps = "{} - {:.2f} FPS".format(self.caption, fps)
                 pg.display.set_caption(with_fps)
 

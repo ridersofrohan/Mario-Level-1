@@ -1,25 +1,24 @@
-Reinforcement Learning for Super Mario Bros Level 1
-=============
+# Reinforcement Learning for Super Mario Level 1
 
-MANUAL CONTROLS: 
+---
+<div id="installation"></div>Installation
+============
 
-Arrow keys for direction
+Uses (https://github.com/koltafrickenfer/gym-super-mario)
 
-'a' for jump
+```shell
+source env/bin/activate
+pip install -r requrements.txt
+```
 
-'s' for action (fireball, run)
+ To load and run the environments, run
 
-
-DEPENDENCIES:
-
-Pygame 1.9.1 (Python 2)
-
-Pygame 1.9.2 (Python 3) - a little trickier to get going.
-
-To install dependencies for Python 2.x:
-
-	pip install -r requirements.txt
-   
-DISCLAIMER:
-
-This project is intended for non-commercial educational purposes.
+```python
+import gym
+env = gym.make('SuperMarioBros-1-1-v0')
+observation = env.reset()
+for _ in range(1000):
+    env.render()
+    action = env.action_space.sample() # your agent here (this takes random actions)
+    observation, reward, done, info = env.step(action)
+```

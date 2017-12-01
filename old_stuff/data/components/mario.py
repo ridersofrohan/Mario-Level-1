@@ -20,7 +20,7 @@ class Mario(pg.sprite.Sprite):
         self.state = c.WALK
         self.image = self.right_frames[self.frame_index]
         self.rect = self.image.get_rect()
-        self.mask = pg.mask.from_surface(self.image)
+        #self.mask = pg.mask.from_surface(self.image)
 
         self.key_timer = 0
 

@@ -21,7 +21,7 @@ class Brick(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.mask = pg.mask.from_surface(self.image)
+        #self.mask = pg.mask.from_surface(self.image)
         self.bumped_up = False
         self.rest_height = y
         self.state = c.RESTING
