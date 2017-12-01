@@ -102,7 +102,7 @@ def simple_rl():
 
 
   alpha = 0.618
-  for episode in range(1, 5):
+  for episode in range(1, 25):
     env.lock.acquire()
     s = env.reset()
     env.lock.release()
