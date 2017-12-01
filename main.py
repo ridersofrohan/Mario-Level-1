@@ -114,14 +114,20 @@ def simple_rl():
     totalReward, reward = 0, 0
     oldInfo = {}
 
-    for i in range(0, 1000):
+    for i in range(0, 100000):
       env.render()
 
       action = get_best_action(s, 0.2)[1]
+      while action == None:
+        action = get_best_action(s, 0.2)[1]
+        print("WE HAVE A NONE ACTION!!!!")
+        print(qTable[str(s)])
+
+
       succ, reward, done, info = env.step(action)
-      print("oth Reward", reward)
+      print("Reward", reward)
       reward = generate_reward(succ, oldInfo, info)
-      print("Our Reward", reward)
+      print("Reward", reward)
 
       print(s)
       print(i, action, reward)
