@@ -1,5 +1,7 @@
 import subprocess
 import os
+from os import path
+import copy
 
 def killFCEUX():
   subprocess.call(["killall", "-9", "fceux"])
@@ -7,6 +9,21 @@ def killFCEUX():
 import gym
 import numpy as np
 import random
+
+# Function to write the data to the appropriate filename
+def write_to_file(filename, data, overwrite=False):
+  if overwrite:
+    #try statement to remove previous file before writing new file
+    try:
+      os.remove(filename)
+    except OSError:
+      pass
+
+  with open(filename, 'a') as f:
+    f.write(data)
+    f.write("\n")
+  f.close()
+
 
 class RandomAgent(object):
   def __init__(self, action_space):
@@ -60,7 +77,7 @@ def simple_rl():
     else:
       maxAction = (float("-inf"), None)
       for action, score in qTable[state].items():
-        if score > maxAction[0]:
+        if score >= maxAction[0]:
           maxAction = (score, actionDict[action])
 
       randAction = env.action_space.sample()
@@ -71,41 +88,56 @@ def simple_rl():
         return (0, randAction)
       return maxAction
 
-  def generate_reward(state, info):
-    if info['life'] == 0:
+  def generate_reward(state, oldInfo, newInfo):
+    if newInfo['life'] == 0:
       return float("-inf")
-    return info['distance'] + info['score'] + info['time']
+    if oldInfo == {}:
+      return 0
+
+    distanceDelta = newInfo['distance'] - oldInfo['distance']
+    scoreDelta = newInfo['score'] - oldInfo['score']
+    timeDelta = 1/(401 - newInfo['time'])
+    print(distanceDelta, scoreDelta, timeDelta)
+    return distanceDelta + scoreDelta + timeDelta
 
 
   alpha = 0.618
-  for episode in range(0, 10):
+  for episode in range(1, 5):
     env.lock.acquire()
     s = env.reset()
     env.lock.release()
 
+    if episode % 50 == 0:
+      write_to_file("weights.txt", str(qTable), True)
+
     done = False
-    G, reward = 0, 0
+    totalReward, reward = 0, 0
+    oldInfo = {}
 
     for i in range(0, 1000):
       env.render()
 
-      action = get_best_action(s, 0.1)[1]
+      action = get_best_action(s, 0.2)[1]
       succ, reward, done, info = env.step(action)
-      reward = generate_reward(succ, info)
+      print("oth Reward", reward)
+      reward = generate_reward(succ, oldInfo, info)
+      print("Our Reward", reward)
 
       print(s)
       print(i, action, reward)
-      print(info)
 
       oldVal = qTable[str(s)][str(action)]
       qTable[str(s)][str(action)] += alpha * (reward + get_best_action(succ, 0.0)[0] - oldVal)
-      G += reward
+
       s = succ
+      totalReward += reward
+      oldInfo = copy.deepcopy(info)
 
       if reward == float("-inf"):
         break
 
-    print("Episode: {} \t Reward: {}".format(episode, G))
+    print("Episode: {} \t Reward: {}".format(episode, reward))
+    write_to_file('rewards.txt', str([episode, totalReward]), False)
 
     env.lock.acquire()
     env.close()
@@ -116,3 +148,4 @@ def simple_rl():
 
 if __name__ == '__main__':
   simple_rl()
+
