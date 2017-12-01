@@ -129,6 +129,9 @@ def simple_rl():
       reward = generate_reward(succ, oldInfo, info)
       print("Reward", reward)
 
+      if done:
+        reward = float("inf")
+
       print(s)
       print(i, action, reward)
 
