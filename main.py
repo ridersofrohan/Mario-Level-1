@@ -86,6 +86,7 @@ def simple_rl():
       action = get_best_action(s, 0.2)[1]
       print(i, action)
       succ, reward, done, info = env.step(action)
+      print(info)
 
       oldVal = qTable[str(s)][str(action)]
       qTable[str(s)][str(action)] += alpha * (reward + get_best_action(succ, 0.0)[0] - oldVal)
