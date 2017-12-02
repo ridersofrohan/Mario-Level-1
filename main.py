@@ -9,6 +9,12 @@ def killFCEUX():
 import gym
 import numpy as np
 import random
+import pickle
+
+# Function to read in weights and create a dictionary and a action table
+def read_in_weights(filename):
+  qTable = eval(open(filename).read())
+  print(qTable)
 
 # Function to write the data to the appropriate filename
 def write_to_file(filename, data, overwrite=False):
@@ -18,6 +24,7 @@ def write_to_file(filename, data, overwrite=False):
       os.remove(filename)
     except OSError:
       pass
+    pickle.dump(data, filename)
 
   with open(filename, 'a') as f:
     f.write(data)
@@ -97,9 +104,9 @@ def simple_rl():
 
     distanceDelta = newInfo['distance'] - oldInfo['distance']
     scoreDelta = newInfo['score'] - oldInfo['score']
-    timeDelta = 1/(401 - newInfo['time'])
-    print(distanceDelta, scoreDelta, timeDelta)
-    return distanceDelta + scoreDelta + timeDelta
+    #timeDelta = 1/(401 - newInfo['time'])
+    print(distanceDelta, scoreDelta)
+    return distanceDelta + scoreDelta
 
 
   alpha = 0.618
@@ -108,7 +115,7 @@ def simple_rl():
     s = env.reset()
     env.lock.release()
 
-    if episode % 50 == 0:
+    if episode % 5 == 0:
       write_to_file("weights.txt", str(qTable), True)
 
     done = False
@@ -129,6 +136,9 @@ def simple_rl():
       print("Reward", reward)
       reward = generate_reward(succ, oldInfo, info)
       print("Reward", reward)
+
+      if info['life'] == 0:
+        reward = float("-inf")
 
       if done:
         reward = float("inf")
@@ -157,5 +167,6 @@ def simple_rl():
 
 
 if __name__ == '__main__':
-  simple_rl()
+  #simple_rl()
+  read_in_weights("weights.txt")
 
