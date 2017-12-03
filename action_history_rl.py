@@ -61,21 +61,22 @@ def simple_rl(weights={}):
       return 0
 
     distanceDelta = newInfo['distance'] - oldInfo['distance']
-    scoreDelta = newInfo['score'] - oldInfo['score']
+    #scoreDelta = newInfo['score'] - oldInfo['score']
     #timeDelta = 1/(401 - newInfo['time'])
-    print("DistanceDelta: {} ScoreDelta: {}".format(distanceDelta, scoreDelta))
-    return distanceDelta + scoreDelta
+    print("DistanceDelta: {}".format(distanceDelta))
+    return distanceDelta
 
+  n = 0.618
+  y = .95
   for episode in range(1, 501):
     env.lock.acquire()
     s = env.reset()
     env.lock.release()
 
-    done = False
+    succ, done, gameOver = None, False, False
     totalReward, reward, previousAction, bestDistance = 0, 0, 0, 0
-    oldInfo = {}
+    oldInfo, info = {}, {}
 
-    n = 0.618
     for i in range(1, 100000):
       env.render()
 
@@ -85,31 +86,39 @@ def simple_rl(weights={}):
         print("WE HAVE A NONE ACTION!!!!")
         print(qTable[str(s)][previousAction])
 
-      succ, ogReward, done, info = env.step(actions[action])
+      # repeat the action 8 times to try and make him hold a
+      for _ in range(8):
+        succ, ogReward, done, info = env.step(actions[action])
+        reward = generate_reward(succ, oldInfo, info)
+        print("OgReward: {}".format(ogReward))
+        print("OurReward: {}".format(reward))
+        if info['life'] == 0 or done:
+          break
+
+        print(s)
+        print(i, actions[action], reward)
+
       reward = generate_reward(succ, oldInfo, info)
-      print("OgReward: {}".format(ogReward))
-      print("OurReward: {}".format(reward))
 
       if info['life'] == 0:
-        reward = -100
+        reward = -10
+        gameOver = True
       if done:
         reward = 2000
 
-      print(s)
-      print(i, actions[action], reward)
-
       oldVal = qTable[str(s)][previousAction][action]
-      qTable[str(s)][previousAction][action] += n * (reward + get_best_action(succ, action, 0.0)[0] - oldVal)
+      qTable[str(s)][previousAction][action] += n * (reward + y*get_best_action(succ, action, 0.0)[0] - oldVal)
       totalReward += reward
 
       if info['distance'] > bestDistance:
         bestDistance = info['distance']
-      if reward == -100:
+
+      if gameOver or done:
         break
 
       s = succ
-      previousAction = action
       oldInfo = copy.deepcopy(info)
+      previousAction = action
 
     print("Episode: {} \t Reward: {} \t Distance: {}".format(episode, totalReward, bestDistance))
 
