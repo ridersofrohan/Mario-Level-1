@@ -12,16 +12,16 @@ from collections import defaultdict
 EXPLORATION_PROB = 0.2
 NUM_ITERS = 10000
 
-def simple_rl(weights={}):
+def simple_rl(previousWeights={}):
     env = gym.make('SuperMarioBros-1-1-v0')
 
     eta = 1.0 / math.sqrt(NUM_ITERS)
     discount = .95
 
-    if weights == {}:
-        qTable = defaultdict(float)
+    if previousWeights == {}:
+        weights = defaultdict(float)
     else: 
-        qTable = weights
+        weights = previousWeights
 
     actions = {
         #0: [0, 0, 0, 0, 0, 0],  # Nothing
@@ -48,7 +48,6 @@ def simple_rl(weights={}):
         features = []
         featureKey = (state, action)
         features.append((featureKey,1))
-        '''
         for i,button in enumerate(actions[action]):
             buttonPressed = [0] * len(actions[action])
             buttonPressed[i] = button
@@ -63,13 +62,12 @@ def simple_rl(weights={}):
             features.append(('nextToGoomba', 1))
         else:
             features.append(('nextToGoomba', 0))
-        '''
         return features
 
     def getQ(state, action):
         score = 0
         for f, v in featureExtractor(state, action):
-            score += qTable[f] * v
+            score += weights[f] * v
         return score
 
     def getAction(state):
@@ -99,8 +97,9 @@ def simple_rl(weights={}):
     def incorporateFeedback(state, action, reward, newState):
         vOpt = max([getQ(newState, aPrime) for aPrime in actions.keys()]) if len(newState) > 0 else 0
         qOpt = getQ(state,action)
+        scale = eta * (qOpt - (reward + (discount*vOpt)))
         for f,v in featureExtractor(state, action):
-            qTable[f] = (1-eta) * qOpt + eta*(reward + (discount*vOpt))
+            weights[f] -= scale*v
 
     for episode in range(1, NUM_ITERS):
         env.lock.acquire()
@@ -155,17 +154,17 @@ def simple_rl(weights={}):
 
         print("Episode: {} \t Reward: {} \t Distance: {}".format(episode, totalReward, bestDistance))
 
-        with open('rewards.txt', 'a') as f:
+        with open('rewards_funcApprox.txt', 'a') as f:
             f.write(str([episode, totalReward, bestDistance]))
             f.write("\n")
         f.close()
 
         if episode % 5 == 0:
-            helpers.write_to_file("weights.pickle", qTable, True)
+            helpers.write_to_file("weights_funcApprox.pickle", weights, True)
 
         if episode % 15 == 0:
-            with open('weights.txt', 'a') as f:
-                f.write(str([episode, qTable]))
+            with open('weights_funcApprox.txt', 'a') as f:
+                f.write(str([episode, weights]))
                 f.write("\n")
             f.close()
 
