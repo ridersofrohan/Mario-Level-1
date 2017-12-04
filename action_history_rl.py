@@ -16,9 +16,6 @@ def simple_rl(weights={}):
     1: [1, 0, 0, 0, 0, 0],  # Up
     2: [0, 0, 1, 0, 0, 0],  # Down
     3: [0, 1, 0, 0, 0, 0],  # Left
-    4: [0, 1, 0, 0, 1, 0],  # Left + A
-    5: [0, 1, 0, 0, 0, 1],  # Left + B
-    6: [0, 1, 0, 0, 1, 1],  # Left + A + B
     7: [0, 0, 0, 1, 0, 0],  # Right
     8: [0, 0, 0, 1, 1, 0],  # Right + A
     9: [0, 0, 0, 1, 0, 1],  # Right + B
@@ -87,7 +84,7 @@ def simple_rl(weights={}):
         print(qTable[str(s)][previousAction])
 
       # repeat the action 8 times to try and make him hold a
-      for _ in range(8):
+      for _ in range(4):
         succ, ogReward, done, info = env.step(actions[action])
         reward = generate_reward(succ, oldInfo, info)
         print("OgReward: {}".format(ogReward))
@@ -137,6 +134,6 @@ def simple_rl(weights={}):
   os._exit(0)
 
 if __name__ == '__main__':
-  simple_rl()
+  simple_rl(helpers.read_in_data('weights.pickle'))
 
 
