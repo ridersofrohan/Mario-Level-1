@@ -9,7 +9,7 @@ import copy
 import math
 from collections import defaultdict
 
-EXPLORATION_PROB = 0.2
+EXPLORATION_PROB = 0.15
 NUM_ITERS = 10000
 
 def simple_rl(previousWeights={}):
@@ -175,6 +175,7 @@ def simple_rl(previousWeights={}):
     os._exit(0)
 
 if __name__ == '__main__':
-  simple_rl()
+  #simple_rl()
+  simple_rl(helpers.read_in_data('weights.pickle'))
 
 
