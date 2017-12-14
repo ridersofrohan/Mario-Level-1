@@ -3,6 +3,8 @@
 *.py~
 .DS_Store
 
+.pickle
+
 # Setuptools distribution and build folders.
 /dist/
 /build
